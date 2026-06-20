@@ -8,26 +8,73 @@ Modules demonstrated:
   - RDR module: Read Depth Ratio from gene expression
   - BAF module: B-Allele Frequency from SNP data
   - Combined analysis
+
+Troubleshooting:
+  If you get "ModuleNotFoundError: No module named 'xclone_torch'":
+  
+  Option 1 - Install in editable mode:
+    cd /path/to/XClone
+    pip install -e .
+  
+  Option 2 - Set PYTHONPATH:
+    export PYTHONPATH="${PYTHONPATH}:/path/to/XClone"
+    python examples/run_bch869_pytorch.py
+  
+  Option 3 - Run from repo root:
+    cd /path/to/XClone
+    python -m examples.run_bch869_pytorch
+  
+  Option 4 - See INSTALLATION_GUIDE.md for more details
 """
+
+import sys
+import os
+from pathlib import Path
+
+# ============================================================================
+# SETUP: Add repository root to path
+# ============================================================================
+
+# Get the directory where this script is located
+script_dir = Path(__file__).resolve().parent  # examples/
+repo_root = script_dir.parent  # XClone/
+
+# Add repo root to Python path if not already there
+if str(repo_root) not in sys.path:
+    sys.path.insert(0, str(repo_root))
+    print(f"[Setup] Added {repo_root} to sys.path")
+
+# ============================================================================
+# IMPORTS
+# ============================================================================
 
 import torch
 import numpy as np
 import pandas as pd
 import anndata as ad
 from typing import Dict, Tuple
-import sys
 
-# Import XClone-Torch
+# Try to import xclone_torch
 try:
     import xclone_torch
     print(f"[XClone-Torch] Version: {xclone_torch.__version__}")
-except ImportError:
-    print("[Error] XClone-Torch not installed. Install with: pip install -e .")
+    print(f"[XClone-Torch] Location: {xclone_torch.__file__}")
+except ImportError as e:
+    print(f"[Error] Failed to import xclone_torch: {e}")
+    print(f"[Error] sys.path: {sys.path}")
+    print("\n[Help] Try one of these solutions:")
+    print("  1. Install in editable mode: cd /path/to/XClone && pip install -e .")
+    print("  2. Set PYTHONPATH: export PYTHONPATH=\"${PYTHONPATH}:/path/to/XClone\"")
+    print("  3. Run from repo root: cd /path/to/XClone && python -m examples.run_bch869_pytorch")
+    print("  4. See INSTALLATION_GUIDE.md for more details")
     sys.exit(1)
 
 # Check CUDA availability
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 print(f"[XClone-Torch] Using device: {device}")
+if device == 'cuda':
+    print(f"[XClone-Torch] GPU: {torch.cuda.get_device_name(0)}")
+    print(f"[XClone-Torch] GPU Memory: {torch.cuda.get_device_properties(0).total_memory / 1e9:.1f} GB")
 
 
 class BCH869Analysis:
