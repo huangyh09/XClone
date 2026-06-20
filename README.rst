@@ -64,6 +64,12 @@ User Guide
 For a complete guide, please see `XClone Documentation <https://xclone-cnv.readthedocs.io/en/latest/>`_.
 
 
+Colab quick test
+================
+
+* Colab open: `GX109_scRNA_RDR_fromxcltk.ipynb <https://colab.research.google.com/github/Rongtingting/xclone-data/blob/main/demo/GX109_demo_notebooks/GX109_scRNA_RDR_fromxcltk.ipynb>`
+
+
 Documentation
 =============
 
