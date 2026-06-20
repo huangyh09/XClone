@@ -1,6 +1,7 @@
 """KL divergence computations."""
 
 import torch
+from ..compat import betaln, gammaln, digamma
 
 
 def kl_beta(q_alpha: torch.Tensor, q_beta: torch.Tensor,
@@ -25,8 +26,6 @@ def kl_beta(q_alpha: torch.Tensor, q_beta: torch.Tensor,
     torch.Tensor
         KL divergence
     """
-    from torch.special import betaln, digamma
-    
     kl = (betaln(p_alpha, p_beta) - betaln(q_alpha, q_beta) +
           (q_alpha - p_alpha) * digamma(q_alpha) +
           (q_beta - p_beta) * digamma(q_beta) +
@@ -57,8 +56,6 @@ def kl_gamma(q_alpha: torch.Tensor, q_beta: torch.Tensor,
     torch.Tensor
         KL divergence
     """
-    from torch.special import gammaln, digamma
-    
     kl = (p_alpha * torch.log(q_beta / p_beta) +
           gammaln(q_alpha) - gammaln(p_alpha) +
           (p_alpha - q_alpha) * digamma(q_alpha) +

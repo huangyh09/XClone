@@ -2,8 +2,8 @@
 
 import torch
 import torch.nn as nn
-from torch.special import betaln, loggamma, xlogy
 from .base import Distribution
+from ..compat import betaln, loggamma
 
 
 class BetaBinomialDistribution(Distribution):
